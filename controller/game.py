@@ -9,13 +9,21 @@ loader=Loader()
 
 SPRITES_PATH = 'model\\sprites'
 ANIMATIONS_PATH = 'model\\sprites\\spaceship_pack\\Blue\\Animation'
+BUTTONS_PATH = 'model\\sprites\\spaceship_pack\\Buttons'
+
 SPRITES = dict(
             ENEMY='enemy_2.png',
             SHOT='spaceship_pack\\Blue\\bullet_resize.png',
             BACKGROUND='background.png',
         )
+
 ANIMATIONS = dict(
     SPACESHIP='{}.png',
+)
+
+BUTTONS = dict(
+    PLAY='play.png',
+    EXIT='exit.png',
 )
 
 SPRITES = {k: os.path.join(SPRITES_PATH, v) for k, v in SPRITES.items()}
@@ -23,6 +31,9 @@ SPRITES = {k: loader.load_img(v) for k, v in SPRITES.items()}
 
 ANIMATIONS = {k: os.path.join(ANIMATIONS_PATH, v) for k, v in ANIMATIONS.items()}
 ANIMATIONS = {k: loader.load_pack(v) for k, v in ANIMATIONS.items()}
+
+BUTTONS = {k: os.path.join(BUTTONS_PATH, v) for k, v in BUTTONS.items()}
+BUTTONS = {k: loader.load_img(v) for k, v in BUTTONS.items()}
 
 SCREEN_SIZE = (600, 600)
 
@@ -74,7 +85,7 @@ class Game():
                     
                     if still_down and arrow_pressed == pygame.K_DOWN:
                         pygame.event.post(evento)
-
+                        arrow_pressed = None
                     else:
                         still_down = True                
                         arrow_pressed = evento.key
@@ -82,6 +93,7 @@ class Game():
 
                     if still_down and arrow_pressed == pygame.K_UP:
                         pygame.event.post(evento)
+                        arrow_pressed = None
                     else:
                         still_down = True                
                         arrow_pressed = evento.key
@@ -89,7 +101,7 @@ class Game():
                 elif evento.key == pygame.K_LEFT:
                     if still_down and arrow_pressed == pygame.K_RIGHT:
                         pygame.event.post(evento)
-
+                        arrow_pressed = None
                     else:
                         still_down = True                
                         arrow_pressed = evento.key
@@ -97,11 +109,10 @@ class Game():
                 elif evento.key == pygame.K_RIGHT:
                     if still_down and arrow_pressed == pygame.K_LEFT:
                         pygame.event.post(evento)
-
+                        arrow_pressed = None
                     else:
                         still_down = True                
-                        arrow_pressed = evento.key
-                     
+                        arrow_pressed = evento.key                                     
 
             
             self.player.update(arrow_pressed)
@@ -144,6 +155,9 @@ class Game():
     def main_menu(self):
         
         mouseX, mouseY = (None,None)
+        padding = 10
+        btn_play_pos = (SCREEN_SIZE[0]//2 - BUTTONS['PLAY'].get_width()//2, SCREEN_SIZE[1]//2)
+        btn_exit_pos = (SCREEN_SIZE[0]//2 - BUTTONS['EXIT'].get_width()//2, SCREEN_SIZE[1]//2 + BUTTONS['PLAY'].get_height()+padding)
         start_game = False
 
         while True:
@@ -161,10 +175,20 @@ class Game():
                     LEFT, MIDDLE, RIGHT = pygame.mouse.get_pressed()
                     if LEFT == 1:
                         mouseX, mouseY = pygame.mouse.get_pos()
-                        start_game = True
+                        if btn_play_pos[0] <= mouseX <= btn_play_pos[0]+BUTTONS['PLAY'].get_width():
+                            if btn_play_pos[1] <= mouseY <= btn_play_pos[1]+BUTTONS['PLAY'].get_height():
+                                start_game = True
+                        
+                        if btn_exit_pos[0] <= mouseX <= btn_exit_pos[0]+BUTTONS['EXIT'].get_width():
+                            if btn_exit_pos[1] <= mouseY <= btn_exit_pos[1]+BUTTONS['EXIT'].get_height():
+                                pygame.quit()
+                                quit()
                     
 
             self.screen.blit(self.background, (0,0))
+            self.screen.blit(BUTTONS['PLAY'], btn_play_pos)
+            self.screen.blit(BUTTONS['EXIT'], btn_exit_pos)
+            
             pygame.display.flip()
         
             if start_game:
