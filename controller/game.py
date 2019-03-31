@@ -8,13 +8,21 @@ from .player import Player
 loader=Loader()
 
 SPRITES_PATH = 'model\\sprites'
-SPRITES = dict(SPACESHIP='spaceship_pack\\Blue\\alienship_new_2_try_resize.png',
+ANIMATIONS_PATH = 'model\\sprites\\spaceship_pack\\Blue\\Animation'
+SPRITES = dict(
             ENEMY='enemy_2.png',
             SHOT='spaceship_pack\\Blue\\bullet_resize.png',
             BACKGROUND='background.png',
         )
+ANIMATIONS = dict(
+    SPACESHIP='{}.png',
+)
+
 SPRITES = {k: os.path.join(SPRITES_PATH, v) for k, v in SPRITES.items()}
 SPRITES = {k: loader.load_img(v) for k, v in SPRITES.items()}
+
+ANIMATIONS = {k: os.path.join(ANIMATIONS_PATH, v) for k, v in ANIMATIONS.items()}
+ANIMATIONS = {k: loader.load_pack(v) for k, v in ANIMATIONS.items()}
 
 SCREEN_SIZE = (600, 600)
 
@@ -27,8 +35,8 @@ class Game():
         # pygame.display.set_icon(logo)        
         self.background = SPRITES['BACKGROUND'].convert()
         pygame.display.set_caption("projeto P4")        
-
-        self.player = Player(SPRITES['SPACESHIP'], SCREEN_SIZE)
+        
+        self.player = Player(ANIMATIONS['SPACESHIP'], SCREEN_SIZE)
         self.shots = Shot(SPRITES['SHOT'])
         self.enemies = []
         
@@ -44,7 +52,8 @@ class Game():
             evento = pygame.event.poll()
 
             if evento.type == pygame.QUIT:
-                return
+                pygame.quit()
+                quit()
                 
             if evento.type == pygame.KEYUP:
                 if evento.key != pygame.K_SPACE:
@@ -94,11 +103,11 @@ class Game():
                         arrow_pressed = evento.key
                      
 
-            if still_down:
-                self.player.update(arrow_pressed)
+            
+            self.player.update(arrow_pressed)
                     
             self.screen.blit(self.background, (0,0))
-            self.screen.blit(self.player.sprite, (self.player.get_position()))
+            self.screen.blit(self.player.get_sprite(), (self.player.get_position()))
             
             for position in self.shots.shots:
                 self.screen.blit(self.shots.sprite, position)
@@ -131,4 +140,35 @@ class Game():
     ## end run()
     def event_handler(self):
         pass
+    
+    def main_menu(self):
+        
+        mouseX, mouseY = (None,None)
+        start_game = False
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        quit()
+                
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    LEFT, MIDDLE, RIGHT = pygame.mouse.get_pressed()
+                    if LEFT == 1:
+                        mouseX, mouseY = pygame.mouse.get_pos()
+                        start_game = True
+                    
+
+            self.screen.blit(self.background, (0,0))
+            pygame.display.flip()
+        
+            if start_game:
+                start_game = False
+                self.run()
+        
     

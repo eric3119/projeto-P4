@@ -2,20 +2,29 @@ import pygame
 from .loader import Loader
 
 class Player():
-    def __init__(self, sprite, screen_size):
-        self.sprite = sprite
+    def __init__(self, sprites, screen_size):
+        self.sprites = sprites        
+        self.sprite_index = 0
+        
         self.xpos, self.ypos = (
-            (screen_size[0]-sprite.get_width())//2,
-            screen_size[1]-sprite.get_height()
+            (screen_size[0]-sprites[0].get_width())//2,
+            screen_size[1]-sprites[0].get_height()
             )
     
     def get_sprite_size(self):
-        return (self.sprite.get_width(), self.sprite.get_height())
+        return (self.sprites[0].get_width(), self.sprites[0].get_height())
+    
+    def get_sprite(self):
+        return self.sprites[self.sprite_index]
     
     def get_position(self):
         return (self.xpos, self.ypos)
     
     def update(self, direction):
+
+        self.sprite_index += 1
+        self.sprite_index %= len(self.sprites)
+
         if direction == pygame.K_UP and self.ypos > 0:
             self.ypos -= 5
         elif direction == pygame.K_DOWN and self.ypos < 600:
