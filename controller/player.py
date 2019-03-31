@@ -1,14 +1,15 @@
 import pygame
 from .loader import Loader
+from .game import SCREEN_SIZE
 
 class Player():
-    def __init__(self, sprites, screen_size):
+    def __init__(self, sprites):
         self.sprites = sprites        
         self.sprite_index = 0
         
         self.xpos, self.ypos = (
-            (screen_size[0]-sprites[0].get_width())//2,
-            screen_size[1]-sprites[0].get_height()
+            (SCREEN_SIZE[0]-sprites[0].get_width())//2,
+            SCREEN_SIZE[1]-sprites[0].get_height()
             )
     
     def get_sprite_size(self):
@@ -27,9 +28,9 @@ class Player():
 
         if direction == pygame.K_UP and self.ypos > 0:
             self.ypos -= 5
-        elif direction == pygame.K_DOWN and self.ypos < 600:
+        elif direction == pygame.K_DOWN and self.ypos < SCREEN_SIZE[1]-self.sprites[0].get_height():
             self.ypos += 5 
         elif direction == pygame.K_LEFT and self.xpos > 0:
             self.xpos -= 5 
-        elif direction == pygame.K_RIGHT and self.xpos < 600:
+        elif direction == pygame.K_RIGHT and self.xpos < SCREEN_SIZE[0]-self.sprites[0].get_width():
             self.xpos += 5

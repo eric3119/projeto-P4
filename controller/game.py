@@ -1,11 +1,13 @@
 import pygame
 import os.path
+
+SCREEN_SIZE = (800, 600)
+
 from .loader import Loader
 from .shot import Shot
 from .enemy import Enemy
 from .player import Player
 
-SCREEN_SIZE = (800, 600)
 
 x = 10
 y = 100
@@ -14,23 +16,24 @@ environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x,y)
 
 loader=Loader()
 
-SPRITES_PATH = 'model\\sprites'
-ANIMATIONS_PATH = 'model\\sprites\\spaceship_pack\\Blue\\Animation'
-BUTTONS_PATH = 'model\\sprites\\spaceship_pack\\Buttons'
+SPRITES_PATH = 'model\\sprites\\'
+ANIMATIONS_PATH = 'model\\sprites\\spaceship_pack\\Blue\\Animation\\'
+BUTTONS_PATH = 'model\\sprites\\spaceship_pack\\Buttons\\'
 
-SPRITES = dict(
-            ENEMY='enemy_2.png',
-            SHOT='spaceship_pack\\Blue\\bullet_resize.png',
+SPRITES = dict(            
+            SHOT='spaceship_pack\\Blue\\bullet2.png',
             BACKGROUND='background.png',
         )
 
 ANIMATIONS = dict(
     SPACESHIP='{}.png',
+    ENEMY='Spacemines\\{}.png',
 )
 
 BUTTONS = dict(
     PLAY='play.png',
     EXIT='exit.png',
+    BAR='press_start_bar.png',
 )
 
 SPRITES = {k: os.path.join(SPRITES_PATH, v) for k, v in SPRITES.items()}
@@ -53,9 +56,9 @@ class Game():
         self.background = SPRITES['BACKGROUND'].convert()
         pygame.display.set_caption("projeto P4")        
         
-        self.player = Player(ANIMATIONS['SPACESHIP'], SCREEN_SIZE)
+        self.player = Player(ANIMATIONS['SPACESHIP'])
         self.shots = Shot(SPRITES['SHOT'])
-        self.enemies = []
+        self.enemies = Enemy(ANIMATIONS['ENEMY'])
         
         self.clock = pygame.time.Clock()
     
@@ -82,9 +85,10 @@ class Game():
                     return
 
                 if evento.key == pygame.K_SPACE:
+                    cannon_size = 0# 62
                     x, y = self.player.get_position()
                     x += self.player.get_sprite_size()[0]//2 - self.shots.get_sprite_size()[0]//2
-                    y -= self.shots.get_sprite_size()[1]
+                    y -= self.shots.get_sprite_size()[1]-cannon_size
                     self.shots.trigger((x,y))
                     
                 elif evento.key == pygame.K_UP:
@@ -129,6 +133,10 @@ class Game():
             for position in self.shots.shots:
                 self.screen.blit(self.shots.sprite, position)
             self.shots.update()
+            
+            for position in self.enemies.enemies:                
+                self.screen.blit(self.enemies.get_sprite(), position)
+            self.enemies.update(pygame.time.get_ticks())
             
             # if (pygame.time.get_ticks() - enemy_control) >= enemy_time:            
             #     enemy_control = pygame.time.get_ticks()
@@ -176,6 +184,8 @@ class Game():
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         quit()
+                    if event.key == pygame.K_SPACE:
+                        start_game = True
                 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     LEFT, MIDDLE, RIGHT = pygame.mouse.get_pressed()
@@ -193,7 +203,7 @@ class Game():
 
             self.screen.blit(self.background, (0,0))
             self.screen.blit(BUTTONS['PLAY'], btn_play_pos)
-            self.screen.blit(BUTTONS['EXIT'], btn_exit_pos)
+            self.screen.blit(BUTTONS['BAR'], btn_exit_pos)
             
             pygame.display.flip()
         
