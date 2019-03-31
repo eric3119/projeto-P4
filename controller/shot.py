@@ -10,6 +10,9 @@ class Shot:
     def trigger(self, position):
         self.shots.append(position)
 
+    def get_sprite_size(self):
+        return (self.sprite.get_width(), self.sprite.get_height())
+
     def destroy(self):
         self.onScreen = False
 

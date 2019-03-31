@@ -8,27 +8,27 @@ from .player import Player
 loader=Loader()
 
 SPRITES_PATH = 'model\\sprites'
-SPRITES = dict(SPACESHIP='spaceship_2.png',
+SPRITES = dict(SPACESHIP='spaceship_pack\\Blue\\alienship_new_2_try_resize.png',
             ENEMY='enemy_2.png',
-            SHOT='shot_2.png',
+            SHOT='spaceship_pack\\Blue\\bullet_resize.png',
             BACKGROUND='background.png',
         )
 SPRITES = {k: os.path.join(SPRITES_PATH, v) for k, v in SPRITES.items()}
 SPRITES = {k: loader.load_img(v) for k, v in SPRITES.items()}
 
+SCREEN_SIZE = (600, 600)
 
 class Game():
     
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((600, 600))
+        self.screen = pygame.display.set_mode(SCREEN_SIZE)
         # logo = pygame.image.load("logo32x32.png")
-        # pygame.display.set_icon(logo)
-        self.loader = Loader()
+        # pygame.display.set_icon(logo)        
         self.background = SPRITES['BACKGROUND'].convert()
         pygame.display.set_caption("projeto P4")        
 
-        self.player = Player(SPRITES['SPACESHIP'])
+        self.player = Player(SPRITES['SPACESHIP'], SCREEN_SIZE)
         self.shots = Shot(SPRITES['SHOT'])
         self.enemies = []
         
@@ -37,8 +37,8 @@ class Game():
     def run(self):
 
         still_down = False
-        key_pressed = None
         arrow_pressed = None
+        
         while True:
         
             evento = pygame.event.poll()
@@ -56,14 +56,43 @@ class Game():
                     return
 
                 if evento.key == pygame.K_SPACE:
-                    self.shots.trigger(self.player.get_position())
-                    evento = None
-                if evento:
-                    if still_down:                
+                    x, y = self.player.get_position()
+                    x += self.player.get_sprite_size()[0]//2 - self.shots.get_sprite_size()[0]//2
+                    y -= self.shots.get_sprite_size()[1]
+                    self.shots.trigger((x,y))
+                    
+                elif evento.key == pygame.K_UP:
+                    
+                    if still_down and arrow_pressed == pygame.K_DOWN:
+                        pygame.event.post(evento)
+
+                    else:
+                        still_down = True                
+                        arrow_pressed = evento.key
+                elif evento.key == pygame.K_DOWN:
+
+                    if still_down and arrow_pressed == pygame.K_UP:
                         pygame.event.post(evento)
                     else:
                         still_down = True                
-                        arrow_pressed = evento.key 
+                        arrow_pressed = evento.key
+                
+                elif evento.key == pygame.K_LEFT:
+                    if still_down and arrow_pressed == pygame.K_RIGHT:
+                        pygame.event.post(evento)
+
+                    else:
+                        still_down = True                
+                        arrow_pressed = evento.key
+                
+                elif evento.key == pygame.K_RIGHT:
+                    if still_down and arrow_pressed == pygame.K_LEFT:
+                        pygame.event.post(evento)
+
+                    else:
+                        still_down = True                
+                        arrow_pressed = evento.key
+                     
 
             if still_down:
                 self.player.update(arrow_pressed)
@@ -90,7 +119,7 @@ class Game():
             #         if projec.xpos < target.xpos + enemy_img.get_width() and projec.xpos + shot_img.get_width() > target.xpos and projec.ypos < target.ypos + enemy_img.get_height() and shot_img.get_width() + projec.ypos > target.ypos:
             #             target.destroy()
             #             projec.destroy()
-            #             score+=1                    
+            #             score+=1
 
             # f = display_score.render("Destruidos: "+str(score), True, [0, 0, 0], [116,166,129])
 

@@ -2,10 +2,12 @@ import pygame
 from .loader import Loader
 
 class Player():
-    def __init__(self, sprite):
-        self.xpos = 0
-        self.ypos = 0        
+    def __init__(self, sprite, screen_size):
         self.sprite = sprite
+        self.xpos, self.ypos = (
+            (screen_size[0]-sprite.get_width())//2,
+            screen_size[1]-sprite.get_height()
+            )
     
     def get_sprite_size(self):
         return (self.sprite.get_width(), self.sprite.get_height())
