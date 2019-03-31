@@ -12,21 +12,23 @@ class Enemy:
         self.anim_time = 200
         self.anim_control = 0
 
-        self.enemy_time = 1000
-        self.enemy_control = 0
-        self.enemy_max_speed = 5
-        self.enemy_max_qtd = 5
-        self.enemy_step = 3
+        self.delta = 1000
+        self.start_time = 0
+        self.max_speed = 5
+        self.max_qtd = 5
+        self.step = 3
+
+        self.rect = self.sprites[0].get_rect()
 
     def destroy(self):
         self.onScreen = False
 
     def trigger(self, clock_ticks):
-        if self.enemy_max_qtd <= len(self.enemies):
+        if self.max_qtd <= len(self.enemies):
             return
-        # speed=(random.random()+1)*enemy_max_speed
-        if (clock_ticks - self.enemy_control) >= self.enemy_time:
-            self.enemy_control = clock_ticks
+        # speed=(random.random()+1)*max_speed
+        if (clock_ticks - self.start_time) >= self.delta:
+            self.start_time = clock_ticks
             self.enemies.append(
                     (
                         random.random()*(SCREEN_SIZE[1]-self.sprites[0].get_width()),
@@ -52,6 +54,6 @@ class Enemy:
             self.sprite_index %= len(self.sprites)
 
         for i in range(len(self.enemies)):
-            self.enemies[i] = (self.enemies[i][0], self.enemies[i][1]+self.enemy_step)
+            self.enemies[i] = (self.enemies[i][0], self.enemies[i][1]+self.step)
         
         self.enemies = list(filter(lambda x: self.isOnScreen(x), self.enemies))

@@ -17,16 +17,18 @@ environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x,y)
 loader=Loader()
 
 SPRITES_PATH = 'model\\sprites\\'
-ANIMATIONS_PATH = 'model\\sprites\\spaceship_pack\\Blue\\Animation\\'
-BUTTONS_PATH = 'model\\sprites\\spaceship_pack\\Buttons\\'
+
+ANIMATIONS_PATH = SPRITES_PATH+'spaceship_pack\\Animation\\'
+BUTTONS_PATH = SPRITES_PATH+'spaceship_pack\\Buttons\\'
+STATIC_PATH = SPRITES_PATH+'spaceship_pack\\Static\\'
 
 SPRITES = dict(            
-            SHOT='spaceship_pack\\Blue\\bullet2.png',
+            SHOT='bullet2.png',
             BACKGROUND='background.png',
         )
 
 ANIMATIONS = dict(
-    SPACESHIP='{}.png',
+    SPACESHIP='Player\\{}.png',
     ENEMY='Spacemines\\{}.png',
 )
 
@@ -36,7 +38,7 @@ BUTTONS = dict(
     BAR='press_start_bar.png',
 )
 
-SPRITES = {k: os.path.join(SPRITES_PATH, v) for k, v in SPRITES.items()}
+SPRITES = {k: os.path.join(STATIC_PATH, v) for k, v in SPRITES.items()}
 SPRITES = {k: loader.load_img(v) for k, v in SPRITES.items()}
 
 ANIMATIONS = {k: os.path.join(ANIMATIONS_PATH, v) for k, v in ANIMATIONS.items()}
@@ -123,7 +125,13 @@ class Game():
                     else:
                         still_down = True                
                         arrow_pressed = evento.key                                     
-
+            elif evento.type == pygame.KEYUP and evento.key in (
+                pygame.K_UP,
+                pygame.K_DOWN,
+                pygame.K_LEFT,
+                pygame.K_RIGHT,
+            ):                
+                arrow_pressed = None
             
             self.player.update(arrow_pressed)
                     
@@ -203,7 +211,7 @@ class Game():
 
             self.screen.blit(self.background, (0,0))
             self.screen.blit(BUTTONS['PLAY'], btn_play_pos)
-            self.screen.blit(BUTTONS['BAR'], btn_exit_pos)
+            self.screen.blit(BUTTONS['EXIT'], btn_exit_pos)
             
             pygame.display.flip()
         

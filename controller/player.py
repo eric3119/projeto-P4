@@ -11,6 +11,8 @@ class Player():
             (SCREEN_SIZE[0]-sprites[0].get_width())//2,
             SCREEN_SIZE[1]-sprites[0].get_height()
             )
+        
+        self.rect = self.sprites[0].get_rect()
     
     def get_sprite_size(self):
         return (self.sprites[0].get_width(), self.sprites[0].get_height())

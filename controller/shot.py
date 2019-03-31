@@ -6,9 +6,19 @@ class Shot:
     def __init__(self, sprite):
         self.shots = []
         self.sprite = sprite
+
+        self.delta = 100
+        self.start_time = 0
+        self.max_speed = 5
+        self.step = sprite.get_height()
+
+        self.rect = self.sprite.get_rect()        
     
     def trigger(self, position):
-        self.shots.append(position)
+        
+        if (pygame.time.get_ticks() - self.start_time) >= self.delta:
+            self.start_time = pygame.time.get_ticks()
+            self.shots.append(position)
 
     def get_sprite_size(self):
         return (self.sprite.get_width(), self.sprite.get_height())
@@ -21,6 +31,6 @@ class Shot:
 
     def update(self):
         for i in range(len(self.shots)):
-            self.shots[i] = (self.shots[i][0], self.shots[i][1]-10)
+            self.shots[i] = (self.shots[i][0], self.shots[i][1]-self.step)
         
         self.shots = list(filter(lambda x: self.isOnScreen(x), self.shots))        
