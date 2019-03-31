@@ -5,6 +5,13 @@ from .shot import Shot
 from .enemy import Enemy
 from .player import Player
 
+SCREEN_SIZE = (800, 600)
+
+x = 10
+y = 100
+from os import environ
+environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x,y)
+
 loader=Loader()
 
 SPRITES_PATH = 'model\\sprites'
@@ -35,7 +42,6 @@ ANIMATIONS = {k: loader.load_pack(v) for k, v in ANIMATIONS.items()}
 BUTTONS = {k: os.path.join(BUTTONS_PATH, v) for k, v in BUTTONS.items()}
 BUTTONS = {k: loader.load_img(v) for k, v in BUTTONS.items()}
 
-SCREEN_SIZE = (600, 600)
 
 class Game():
     
