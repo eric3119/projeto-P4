@@ -2,6 +2,50 @@ import pygame
 import os.path
 
 class Loader():
+
+    def __init__(self, sprites_path):
+
+        self.sprites_path = sprites_path
+
+        self.animations_path = self.sprites_path+'Animation\\'
+        self.buttons_path = self.sprites_path+'Buttons\\'
+        self.static_path = self.sprites_path+'Static\\'
+
+        SPRITES = dict(            
+                    SHOT='bullet2.png',
+                    BACKGROUND='background.png',
+                )
+
+        ANIMATIONS = dict(
+            SPACESHIP='Player\\{}.png',
+            ENEMY='Spacemines\\{}.png',
+        )
+
+        BUTTONS = dict(
+            PLAY='play.png',
+            EXIT='exit.png',
+            BAR='press_start_bar.png',
+        )
+
+        SPRITES = {k: os.path.join(self.static_path, v) for k, v in SPRITES.items()}
+        SPRITES = {k: self.load_img(v) for k, v in SPRITES.items()}        
+
+        ANIMATIONS = {k: os.path.join(self.animations_path, v) for k, v in ANIMATIONS.items()}
+        ANIMATIONS = {k: self.load_pack(v) for k, v in ANIMATIONS.items()}
+
+        BUTTONS = {k: os.path.join(self.buttons_path, v) for k, v in BUTTONS.items()}
+        BUTTONS = {k: self.load_img(v) for k, v in BUTTONS.items()}
+
+        self.sprites_dict = {
+            'SPRITES': SPRITES,
+            'ANIMATIONS': ANIMATIONS,
+            'BUTTONS': BUTTONS,
+        }
+
+    def get(self, item):
+        return self.sprites_dict.get(item)
+
+
     def load_img(self, path):
         return pygame.image.load(path)
     

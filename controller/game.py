@@ -8,45 +8,13 @@ from .shot import Shot
 from .enemy import Enemy
 from .player import Player
 
+from os import environ
 
 x = 10
 y = 100
-from os import environ
 environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x,y)
 
-loader=Loader()
-
-SPRITES_PATH = 'model\\sprites\\'
-
-ANIMATIONS_PATH = SPRITES_PATH+'spaceship_pack\\Animation\\'
-BUTTONS_PATH = SPRITES_PATH+'spaceship_pack\\Buttons\\'
-STATIC_PATH = SPRITES_PATH+'spaceship_pack\\Static\\'
-
-SPRITES = dict(            
-            SHOT='bullet2.png',
-            BACKGROUND='background.png',
-        )
-
-ANIMATIONS = dict(
-    SPACESHIP='Player\\{}.png',
-    ENEMY='Spacemines\\{}.png',
-)
-
-BUTTONS = dict(
-    PLAY='play.png',
-    EXIT='exit.png',
-    BAR='press_start_bar.png',
-)
-
-SPRITES = {k: os.path.join(STATIC_PATH, v) for k, v in SPRITES.items()}
-SPRITES = {k: loader.load_img(v) for k, v in SPRITES.items()}
-
-ANIMATIONS = {k: os.path.join(ANIMATIONS_PATH, v) for k, v in ANIMATIONS.items()}
-ANIMATIONS = {k: loader.load_pack(v) for k, v in ANIMATIONS.items()}
-
-BUTTONS = {k: os.path.join(BUTTONS_PATH, v) for k, v in BUTTONS.items()}
-BUTTONS = {k: loader.load_img(v) for k, v in BUTTONS.items()}
-
+loader=Loader(sprites_path='model\\sprites\\spaceship_pack\\')
 
 class Game():
     
@@ -55,12 +23,12 @@ class Game():
         self.screen = pygame.display.set_mode(SCREEN_SIZE)
         # logo = pygame.image.load("logo32x32.png")
         # pygame.display.set_icon(logo)        
-        self.background = SPRITES['BACKGROUND'].convert()
+        self.background = loader.get('SPRITES').get('BACKGROUND').convert()
         pygame.display.set_caption("projeto P4")        
         
-        self.player = Player(ANIMATIONS['SPACESHIP'])
-        self.shots = Shot(SPRITES['SHOT'])
-        self.enemies = Enemy(ANIMATIONS['ENEMY'])
+        self.player = Player(loader.get('ANIMATIONS').get('SPACESHIP'))
+        self.shots = Shot(loader.get('SPRITES').get('SHOT'))
+        self.enemies = Enemy(loader.get('ANIMATIONS').get('ENEMY'))
         
         self.clock = pygame.time.Clock()
     
@@ -178,8 +146,8 @@ class Game():
         
         mouseX, mouseY = (None,None)
         padding = 10
-        btn_play_pos = (SCREEN_SIZE[0]//2 - BUTTONS['PLAY'].get_width()//2, SCREEN_SIZE[1]//2)
-        btn_exit_pos = (SCREEN_SIZE[0]//2 - BUTTONS['EXIT'].get_width()//2, SCREEN_SIZE[1]//2 + BUTTONS['PLAY'].get_height()+padding)
+        btn_play_pos = (SCREEN_SIZE[0]//2 - loader.get('BUTTONS').get('PLAY').get_width()//2, SCREEN_SIZE[1]//2)
+        btn_exit_pos = (SCREEN_SIZE[0]//2 - loader.get('BUTTONS').get('EXIT').get_width()//2, SCREEN_SIZE[1]//2 + loader.get('BUTTONS').get('PLAY').get_height()+padding)
         start_game = False
 
         while True:
@@ -199,19 +167,19 @@ class Game():
                     LEFT, MIDDLE, RIGHT = pygame.mouse.get_pressed()
                     if LEFT == 1:
                         mouseX, mouseY = pygame.mouse.get_pos()
-                        if btn_play_pos[0] <= mouseX <= btn_play_pos[0]+BUTTONS['PLAY'].get_width():
-                            if btn_play_pos[1] <= mouseY <= btn_play_pos[1]+BUTTONS['PLAY'].get_height():
+                        if btn_play_pos[0] <= mouseX <= btn_play_pos[0]+loader.get('BUTTONS').get('PLAY').get_width():
+                            if btn_play_pos[1] <= mouseY <= btn_play_pos[1]+loader.get('BUTTONS').get('PLAY').get_height():
                                 start_game = True
                         
-                        if btn_exit_pos[0] <= mouseX <= btn_exit_pos[0]+BUTTONS['EXIT'].get_width():
-                            if btn_exit_pos[1] <= mouseY <= btn_exit_pos[1]+BUTTONS['EXIT'].get_height():
+                        if btn_exit_pos[0] <= mouseX <= btn_exit_pos[0]+loader.get('BUTTONS').get('EXIT').get_width():
+                            if btn_exit_pos[1] <= mouseY <= btn_exit_pos[1]+loader.get('BUTTONS').get('EXIT').get_height():
                                 pygame.quit()
                                 quit()
                     
 
             self.screen.blit(self.background, (0,0))
-            self.screen.blit(BUTTONS['PLAY'], btn_play_pos)
-            self.screen.blit(BUTTONS['EXIT'], btn_exit_pos)
+            self.screen.blit(loader.get('BUTTONS').get('PLAY'), btn_play_pos)
+            self.screen.blit(loader.get('BUTTONS').get('EXIT'), btn_exit_pos)
             
             pygame.display.flip()
         
