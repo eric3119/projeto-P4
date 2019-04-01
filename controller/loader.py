@@ -12,9 +12,10 @@ class Loader():
         self.static_path = self.sprites_path+'Static\\'
         self.numbers_path = self.static_path+'Numbers\\'
 
-        SPRITES = dict(            
+        SPRITES = dict(
                     SHOT='bullet2.png',
                     BACKGROUND='background.png',
+                    MENU='background_menu.png',
                 )
 
         ANIMATIONS = dict(

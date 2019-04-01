@@ -17,7 +17,7 @@ class Number:
         self.missed = False
     
     def trigger(self):
-
+        self.rects = []
         self.x = random.random()
         self.x = int(self.x*5)
         self.y = random.random()
@@ -27,7 +27,7 @@ class Number:
         value = self.result
         for x in range(self.max_length):
             randx = random.random()*(SCREEN_SIZE[0]-self.sprites[0].get_width())
-            randy = random.random()*100 - 100
+            randy = random.random()*100 - 1000
             new_rect = self.sprites[value].get_rect()
             new_rect.x, new_rect.y = (randx,randy)
             self.rects.append({
