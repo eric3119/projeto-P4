@@ -7,6 +7,7 @@ from .loader import Loader
 from .shot import Shot
 from .enemy import Enemy
 from .player import Player
+from .number import Number
 
 from os import environ
 
@@ -29,6 +30,7 @@ class Game():
         self.player = Player(loader.get('ANIMATIONS').get('SPACESHIP'))
         self.shots = Shot(loader.get('SPRITES').get('SHOT'))
         self.enemies = Enemy(loader.get('ANIMATIONS').get('ENEMY'))
+        self.numbers = Number(loader.get('NUMBERS'))
         
         self.clock = pygame.time.Clock()
     
@@ -114,6 +116,10 @@ class Game():
                 self.screen.blit(self.enemies.get_sprite(), (item['rect'].x, item['rect'].y))
             self.enemies.update(pygame.time.get_ticks())
 
+            for item in self.numbers.rects:
+                self.screen.blit(self.numbers.get_sprite(item['value']), (item['rect'].x, item['rect'].y))
+            self.numbers.update()
+
             ## check collision
             
             for enemy in self.enemies.rects:
@@ -139,6 +145,9 @@ class Game():
             
             f = text.render("Destruidos: "+str(self.enemies.dead_num), True, [255, 255, 255])
             self.screen.blit(f, (0,0))
+            
+            f = text.render(self.numbers.get_expression(), True, [255, 255, 255])
+            self.screen.blit(f, (0,30))
 
             pygame.display.flip()
 

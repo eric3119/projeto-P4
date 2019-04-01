@@ -10,6 +10,7 @@ class Loader():
         self.animations_path = self.sprites_path+'Animation\\'
         self.buttons_path = self.sprites_path+'Buttons\\'
         self.static_path = self.sprites_path+'Static\\'
+        self.numbers_path = self.static_path+'Numbers\\'
 
         SPRITES = dict(            
                     SHOT='bullet2.png',
@@ -27,6 +28,8 @@ class Loader():
             BAR='press_start_bar.png',
         )
 
+        NUMBERS = {k:'{}.png'.format(k) for k in range(10)}
+
         SPRITES = {k: os.path.join(self.static_path, v) for k, v in SPRITES.items()}
         SPRITES = {k: self.load_img(v) for k, v in SPRITES.items()}        
 
@@ -34,12 +37,16 @@ class Loader():
         ANIMATIONS = {k: self.load_pack(v) for k, v in ANIMATIONS.items()}
 
         BUTTONS = {k: os.path.join(self.buttons_path, v) for k, v in BUTTONS.items()}
-        BUTTONS = {k: self.load_img(v) for k, v in BUTTONS.items()}
+        BUTTONS = {k: self.load_img(v) for k, v in BUTTONS.items()}        
+        
+        NUMBERS = {k: os.path.join(self.numbers_path, v) for k, v in NUMBERS.items()}
+        NUMBERS = {k: self.load_img(v) for k, v in NUMBERS.items()}        
 
         self.sprites_dict = {
             'SPRITES': SPRITES,
             'ANIMATIONS': ANIMATIONS,
             'BUTTONS': BUTTONS,
+            'NUMBERS': NUMBERS,
         }
 
     def get(self, item):

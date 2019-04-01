@@ -35,13 +35,7 @@ class Enemy:
         # speed=(random.random()+1)*max_speed
         if (clock_ticks - self.start_time) >= self.delta:
             self.start_time = clock_ticks
-            randNum = random.random()*(SCREEN_SIZE[1]-self.sprites[0].get_width())
-            # self.enemies.append(
-            #         (
-            #             randNum,
-            #             0, 
-            #         )
-            #     )
+            randNum = random.random()*(SCREEN_SIZE[1]-self.sprites[0].get_width())            
             new_rect = self.sprites[0].get_rect()
             new_rect.x, new_rect.y = (randNum,0)
             self.rects.append({
