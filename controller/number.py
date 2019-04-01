@@ -5,18 +5,29 @@ from .game import SCREEN_SIZE
 class Number:
     
     def __init__(self, sprites):
+        ##############
+        ## retangulos para detecção de colisões
+        #######
         self.rects=[]
+
         self.sprites = sprites
+
+        ##############
+        ## variaveis das operações
+        #######
         self.x=0
         self.y=0
         self.op='+'
-        self.result = 0
-        self.answered = True
-        self.max_length = 4
-        self.step = 2
-        self.missed = False
+        self.result = 0 
+        #########
+        
+        self.answered = True        
+        self.missed = False 
+        self.max_length = 4 # maximo de numeros na tela
+        self.step = 2 # quantidade de avanço de pixels
     
     def trigger(self):
+        ''' limpa as variaveis e gera uma nova expressão matematica '''
         self.rects = []
         self.x = random.random()
         self.x = int(self.x*5)
@@ -45,13 +56,16 @@ class Number:
         return self.sprites[value]
 
     def destroy(self, rect):
+        ''' marca um numero para ser destruido se saiu da tela ou se colidiu '''
         i = self.rects.index(rect)
         self.rects[i]['dead'] = True        
 
     def isOnScreen(self, item):
+        ''' verifica se não foi destruido ou se saiu da tela '''
         return True if item['rect'].y < SCREEN_SIZE[1] and not item['dead'] else False
 
-    def update(self):        
+    def update(self):
+        ''' checa se obteve o resultado e atualiza as posições '''
         if self.answered:
             self.answered = False
             self.trigger()
@@ -59,21 +73,27 @@ class Number:
             self.trigger()
             self.missed = True
             
-        
+        ##############
+        ## atualização da posição atual
+        #######
         for item in self.rects:            
             item['rect'].x, item['rect'].y = (item['rect'].x, item['rect'].y+self.step)
         
+        # remove os que colidiram ou sairam da tela
         self.rects = list(filter(lambda x: self.isOnScreen(x), self.rects))
     
     def get_expression(self):
+        ''' retorna a string da expressão '''
         return '{} {} {} = ?'.format(self.x, self.op, self.y)
     
     def is_answer(self, num):
+        ''' verifica se num é um resultado '''
         if num == self.result:
             self.answered = True
         return self.answered
     
     def missed_answer(self):
+        ''' verifica se a resposta não foi obtida '''
         if self.missed:
             self.missed = False
             return True
