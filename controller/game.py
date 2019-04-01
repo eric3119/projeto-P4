@@ -18,12 +18,10 @@ environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x,y)
 loader=Loader(sprites_path='model\\sprites\\spaceship_pack\\')
 
 class Game():
-    
+    ''' loop principal e menus '''
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode(SCREEN_SIZE)
-        # logo = pygame.image.load("logo32x32.png")
-        # pygame.display.set_icon(logo)        
         self.background = loader.get('SPRITES').get('BACKGROUND').convert()
         self.background_menu = loader.get('SPRITES').get('MENU').convert()
         pygame.display.set_caption("projeto P4")        
@@ -36,13 +34,16 @@ class Game():
         self.clock = pygame.time.Clock()
     
     def run(self):
-
+        ''' loop principal, eventos, colisões e painel '''
         still_down = False
         arrow_pressed = None
         text = pygame.font.Font(pygame.font.get_default_font(), 30)
 
         while self.player.is_alive():
-        
+            
+            #############
+            # gerenciar eventos
+            ######
             evento = pygame.event.poll()
 
             if evento.type == pygame.QUIT:
@@ -59,10 +60,10 @@ class Game():
                     return
 
                 if evento.key == pygame.K_SPACE:
-                    cannon_size = 0# 62
+                    # cannon_size = 0# 62 # 
                     x, y = self.player.get_position()
                     x += self.player.get_sprite_size()[0]//2 - self.shots.get_sprite_size()[0]//2
-                    y -= self.shots.get_sprite_size()[1]-cannon_size
+                    y -= self.shots.get_sprite_size()[1] # - cannon_size
                     self.shots.trigger((x,y))
                     
                 elif evento.key == pygame.K_UP:
@@ -104,7 +105,8 @@ class Game():
                 pygame.K_RIGHT,
             ):                
                 arrow_pressed = None
-            
+            ############
+
             self.player.update(arrow_pressed)
                     
             self.screen.blit(self.background, (0,0))
@@ -125,7 +127,9 @@ class Game():
             if self.numbers.missed_answer():
                 self.player.health-=1
 
-            ## check collision
+            #############
+            # checar colisões
+            ######
             
             for enemy in self.enemies.rects:
                 
@@ -146,7 +150,11 @@ class Game():
                     if self.numbers.is_answer(number['value']):
                         self.player.health+=1
                     self.numbers.destroy(number)
-            
+            ################
+
+            #############
+            # painel do jogo
+            ######
             f = text.render("Vidas: "+str(self.player.health), True, [255, 255, 255])
             self.screen.blit(f, (
                     (SCREEN_SIZE[0])-(text.size("Vidas: "+str(self.player.health))[0]),
@@ -159,17 +167,18 @@ class Game():
             
             f = text.render(self.numbers.get_expression(), True, [255, 255, 255])
             self.screen.blit(f, (0,30))
-
+            #################
             pygame.display.flip()
 
             self.clock.tick(30)
         #end loop
         return self.game_over()
     ## end run()
-    def event_handler(self):
-        pass
+    # def event_handler(self):
+    #     pass
 
     def game_over(self):
+        ''' menu de reinicialização de jogo '''
         mouseX, mouseY = (None, None)
         padding = 10
         btn_play_pos = (SCREEN_SIZE[0] // 2 - loader.get('BUTTONS').get('PLAY').get_width() // 2, SCREEN_SIZE[1] // 2)
@@ -178,6 +187,10 @@ class Game():
         start_game = False
 
         while True:
+
+            #############
+            # gerenciar eventos
+            ######
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -214,15 +227,24 @@ class Game():
         return False
 
     def main_menu(self):
-        
-        mouseX, mouseY = (None,None)
-        padding = 10
+        ''' menu principal '''
+        mouseX, mouseY = (None,None)## posição do mouse
+        padding = 10 #distancia entre botões
+
+        ##########
+        # posição dos botões
+        ######
         btn_play_pos = (SCREEN_SIZE[0]//2 - loader.get('BUTTONS').get('PLAY').get_width()//2, SCREEN_SIZE[1]//2)
         btn_exit_pos = (SCREEN_SIZE[0]//2 - loader.get('BUTTONS').get('EXIT').get_width()//2,
                         SCREEN_SIZE[1]//2 + loader.get('BUTTONS').get('PLAY').get_height()+padding)
+        ##########
         start_game = False
 
         while True:
+
+            #############
+            # gerenciar eventos
+            ######
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()

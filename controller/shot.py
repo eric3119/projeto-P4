@@ -1,7 +1,7 @@
 import pygame
 
 class Shot:
-    
+    ''' projeteis disparados pela nave '''
     def __init__(self, sprite):
                 
         self.sprite = sprite

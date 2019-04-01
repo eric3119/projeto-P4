@@ -2,9 +2,8 @@ import pygame
 import os.path
 
 class Loader():
-
-    def __init__(self, sprites_path):
-        ''' carrega as animações e os elementos estaticos '''
+    ''' carrega as animações e os elementos estaticos '''
+    def __init__(self, sprites_path):       
 
         self.sprites_path = sprites_path
 
