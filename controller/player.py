@@ -6,6 +6,8 @@ class Player():
     def __init__(self, sprites):
         self.sprites = sprites        
         self.sprite_index = 0
+        self.anim_control = 0
+        self.anim_delta = 10
 
         self.health = 10
         self.shield_time = 0
@@ -38,9 +40,11 @@ class Player():
             self.shield_time = pygame.time.get_ticks()            
     
     def update(self, direction):
-
-        self.sprite_index += 1
-        self.sprite_index %= len(self.sprites)
+        
+        if (pygame.time.get_ticks() - self.anim_control) >= self.anim_delta:
+            self.anim_control = pygame.time.get_ticks()
+            self.sprite_index += 1
+            self.sprite_index %= len(self.sprites)
 
         if direction == pygame.K_UP and self.ypos > 0:
             self.ypos -= self.step
