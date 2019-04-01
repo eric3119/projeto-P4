@@ -36,7 +36,7 @@ class Game():
 
         still_down = False
         arrow_pressed = None
-        
+        text = pygame.font.Font(pygame.font.get_default_font(), 30)
         while True:
         
             evento = pygame.event.poll()
@@ -125,28 +125,18 @@ class Game():
                     
                     if shot['rect'].colliderect(enemy['rect']):                        
                         self.enemies.destroy(enemy)
-                        self.shots.destroy(shot)
-
-            # if (pygame.time.get_ticks() - enemy_control) >= enemy_time:            
-            #     enemy_control = pygame.time.get_ticks()
-            #     enemies.append(enemy.Enemy(xpos = screen_width, ypos= random.random()*(screen_height-enemy_img.get_height()), speed=(random.random()+1)*enemy_max_speed))
+                        self.shots.destroy(shot)            
             
-            # for target in enemies:
-            #     self.screen.blit(enemy_img, (target.xpos, target.ypos))
-            #     target.update()
-            #     #colision enemy ship
-            #     if target.xpos < xpos + ship_img.get_width() and target.xpos + ship_img.get_height() > xpos and target.ypos < ypos + ship_img.get_height() and ship_img.get_width() + target.ypos > ypos:
-            #         return
-            #     #colision enemy shot
-            #     for projec in shots:
-            #         if projec.xpos < target.xpos + enemy_img.get_width() and projec.xpos + shot_img.get_width() > target.xpos and projec.ypos < target.ypos + enemy_img.get_height() and shot_img.get_width() + projec.ypos > target.ypos:
-            #             target.destroy()
-            #             projec.destroy()
-            #             score+=1
+            f = text.render("Vidas: "+str(self.player.health), True, [255, 255, 255])
+            self.screen.blit(f, (
+                    (SCREEN_SIZE[0])-(text.size("Vidas: "+str(self.player.health))[0]),
+                    0
+                )
+            )
+            
+            f = text.render("Destruidos: "+str(self.enemies.dead_num), True, [255, 255, 255])
+            self.screen.blit(f, (0,0))
 
-            # f = display_score.render("Destruidos: "+str(score), True, [0, 0, 0], [116,166,129])
-
-            # self.screen.blit(f, ((screen_width//2)-(display_score.size("Destruidos: "+str(score))[0]//2),0))
             pygame.display.flip()
 
             self.clock.tick(30)

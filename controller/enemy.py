@@ -5,7 +5,8 @@ class Enemy:
 
     def __init__(self, sprites):
         # self.enemies = []
-        self.rects = []        
+        self.rects = []
+        self.dead_num = 0
         
         self.sprites = sprites
         self.sprite_index = 0
@@ -23,6 +24,7 @@ class Enemy:
     def destroy(self, rect):
         i = self.rects.index(rect)
         self.rects[i]['dead'] = True
+        self.dead_num += 1
     
     def alive(self, rect):        
         return not rect['dead']

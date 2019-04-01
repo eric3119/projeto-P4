@@ -6,6 +6,10 @@ class Player():
     def __init__(self, sprites):
         self.sprites = sprites        
         self.sprite_index = 0
+
+        self.health = 10
+        self.shield_time = 0
+        self.delta = 2000
         
         self.step = 10
 
@@ -22,11 +26,17 @@ class Player():
     def get_sprite(self):
         return self.sprites[self.sprite_index]
     
+    def draw_shield(self):
+        return (pygame.time.get_ticks() - self.shield_time) < self.delta
+    
     def get_position(self):
         return (self.xpos, self.ypos)
     
     def collide(self):
-        pass
+        if (pygame.time.get_ticks() - self.shield_time) >= self.delta:
+            self.health-=1
+            self.shield_time = pygame.time.get_ticks()
+            print(self.health)
     
     def update(self, direction):
 

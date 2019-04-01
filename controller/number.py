@@ -3,7 +3,7 @@ import pygame
 class Number:
     
     def __init__(self, sprite):
-         pass
+        pass
     
     def trigger(self, position):
         pass
