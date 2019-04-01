@@ -26,7 +26,7 @@ class Player():
     def get_sprite(self):
         return self.sprites[self.sprite_index]
     
-    def draw_shield(self):
+    def is_shield(self):
         return (pygame.time.get_ticks() - self.shield_time) < self.delta
     
     def get_position(self):

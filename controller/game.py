@@ -119,6 +119,9 @@ class Game():
             for enemy in self.enemies.rects:
                 
                 if enemy['rect'].colliderect(self.player.rect):
+                    if not self.player.is_shield():
+                        self.enemies.destroy(enemy)
+                    
                     self.player.collide()
                 
                 for shot in self.shots.rects:
