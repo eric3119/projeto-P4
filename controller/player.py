@@ -5,7 +5,7 @@ from .game import SCREEN_SIZE
 class Player():
     def __init__(self, sprites):
         self.sprites = sprites        
-        self.sprite_index = 0
+        self.sprite_index = 0 # indice do loop da animação
         self.anim_control = 0
         self.anim_delta = 10
 
