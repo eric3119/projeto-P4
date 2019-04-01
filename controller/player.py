@@ -9,7 +9,7 @@ class Player():
         self.anim_control = 0
         self.anim_delta = 10
 
-        self.health = 10
+        self.health = 5
         self.shield_time = 0
         self.delta = 2000
         
@@ -56,3 +56,6 @@ class Player():
             self.xpos += self.step
         
         (self.rect.x, self.rect.y) = (self.xpos, self.ypos)
+
+    def is_alive(self):
+        return True if self.health > 0 else False

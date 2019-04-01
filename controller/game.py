@@ -25,6 +25,7 @@ class Game():
         # logo = pygame.image.load("logo32x32.png")
         # pygame.display.set_icon(logo)        
         self.background = loader.get('SPRITES').get('BACKGROUND').convert()
+        self.background_menu = loader.get('SPRITES').get('MENU').convert()
         pygame.display.set_caption("projeto P4")        
         
         self.player = Player(loader.get('ANIMATIONS').get('SPACESHIP'))
@@ -39,7 +40,8 @@ class Game():
         still_down = False
         arrow_pressed = None
         text = pygame.font.Font(pygame.font.get_default_font(), 30)
-        while True:
+
+        while self.player.is_alive():
         
             evento = pygame.event.poll()
 
@@ -162,16 +164,62 @@ class Game():
 
             self.clock.tick(30)
         #end loop
+        return self.game_over()
     ## end run()
     def event_handler(self):
         pass
-    
+
+    def game_over(self):
+        mouseX, mouseY = (None, None)
+        padding = 10
+        btn_play_pos = (SCREEN_SIZE[0] // 2 - loader.get('BUTTONS').get('PLAY').get_width() // 2, SCREEN_SIZE[1] // 2)
+        btn_exit_pos = (SCREEN_SIZE[0] // 2 - loader.get('BUTTONS').get('EXIT').get_width() // 2,
+                        SCREEN_SIZE[1] // 2 + loader.get('BUTTONS').get('PLAY').get_height() + padding)
+        start_game = False
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        quit()
+                    if event.key == pygame.K_SPACE:
+                        return True
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    LEFT, MIDDLE, RIGHT = pygame.mouse.get_pressed()
+                    if LEFT == 1:
+                        mouseX, mouseY = pygame.mouse.get_pos()
+                        if btn_play_pos[0] <= mouseX <= btn_play_pos[0] + loader.get('BUTTONS').get('PLAY').get_width():
+                            if btn_play_pos[1] <= mouseY <= btn_play_pos[1] + loader.get('BUTTONS').get(
+                                    'PLAY').get_height():
+                                print('teste')
+                                return True
+
+                        if btn_exit_pos[0] <= mouseX <= btn_exit_pos[0] + loader.get('BUTTONS').get('EXIT').get_width():
+                            if btn_exit_pos[1] <= mouseY <= btn_exit_pos[1] + loader.get('BUTTONS').get(
+                                    'EXIT').get_height():
+                                pygame.quit()
+                                quit()
+
+            self.screen.blit(self.background_menu, (0, 0))
+            self.screen.blit(loader.get('BUTTONS').get('PLAY'), btn_play_pos)
+            self.screen.blit(loader.get('BUTTONS').get('EXIT'), btn_exit_pos)
+
+            pygame.display.flip()
+        return False
+
     def main_menu(self):
         
         mouseX, mouseY = (None,None)
         padding = 10
         btn_play_pos = (SCREEN_SIZE[0]//2 - loader.get('BUTTONS').get('PLAY').get_width()//2, SCREEN_SIZE[1]//2)
-        btn_exit_pos = (SCREEN_SIZE[0]//2 - loader.get('BUTTONS').get('EXIT').get_width()//2, SCREEN_SIZE[1]//2 + loader.get('BUTTONS').get('PLAY').get_height()+padding)
+        btn_exit_pos = (SCREEN_SIZE[0]//2 - loader.get('BUTTONS').get('EXIT').get_width()//2,
+                        SCREEN_SIZE[1]//2 + loader.get('BUTTONS').get('PLAY').get_height()+padding)
         start_game = False
 
         while True:
@@ -201,7 +249,7 @@ class Game():
                                 quit()
                     
 
-            self.screen.blit(self.background, (0,0))
+            self.screen.blit(self.background_menu, (0,0))
             self.screen.blit(loader.get('BUTTONS').get('PLAY'), btn_play_pos)
             self.screen.blit(loader.get('BUTTONS').get('EXIT'), btn_exit_pos)
             
@@ -209,6 +257,6 @@ class Game():
         
             if start_game:
                 start_game = False
-                self.run()
+                return self.run()
         
     
