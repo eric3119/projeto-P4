@@ -17,8 +17,8 @@ class Enemy:
         #############
         ## controle do delay de geração de inimigos
         ######
-        self.delta = 1000
-        self.start_time = 0
+        self.delta = 1000 # tempo de duração do delay
+        self.start_time = 0 # tempo do ultimo gerado
         
         #self.max_speed = 5
 
@@ -74,7 +74,7 @@ class Enemy:
         return (self.sprites.get_width()[0], self.sprites.get_height()[0])
 
     def update(self, clock_ticks):
-        
+        ''' atualiza as posições e o estado das animações '''
         self.trigger(clock_ticks) # tenta gerar um novo inimigo
 
         ##############
