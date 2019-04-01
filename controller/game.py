@@ -106,14 +106,27 @@ class Game():
             self.screen.blit(self.background, (0,0))
             self.screen.blit(self.player.get_sprite(), (self.player.get_position()))
             
-            for position in self.shots.shots:
-                self.screen.blit(self.shots.sprite, position)
+            for item in self.shots.rects:
+                self.screen.blit(self.shots.sprite, item['rect'])
             self.shots.update()
             
-            for position in self.enemies.enemies:                
-                self.screen.blit(self.enemies.get_sprite(), position)
+            for item in self.enemies.rects:
+                self.screen.blit(self.enemies.get_sprite(), (item['rect'].x, item['rect'].y))
             self.enemies.update(pygame.time.get_ticks())
+
+            ## check collision
             
+            for enemy in self.enemies.rects:
+                
+                if enemy['rect'].colliderect(self.player.rect):
+                    self.player.collide()
+                
+                for shot in self.shots.rects:
+                    
+                    if shot['rect'].colliderect(enemy['rect']):                        
+                        self.enemies.destroy(enemy)
+                        self.shots.destroy(shot)
+
             # if (pygame.time.get_ticks() - enemy_control) >= enemy_time:            
             #     enemy_control = pygame.time.get_ticks()
             #     enemies.append(enemy.Enemy(xpos = screen_width, ypos= random.random()*(screen_height-enemy_img.get_height()), speed=(random.random()+1)*enemy_max_speed))

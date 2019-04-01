@@ -4,7 +4,8 @@ import random
 class Enemy:
 
     def __init__(self, sprites):
-        self.enemies = []
+        # self.enemies = []
+        self.rects = []        
         
         self.sprites = sprites
         self.sprite_index = 0
@@ -18,26 +19,39 @@ class Enemy:
         self.max_qtd = 5
         self.step = 3
 
-        self.rect = self.sprites[0].get_rect()
 
-    def destroy(self):
-        self.onScreen = False
+    def destroy(self, rect):
+        i = self.rects.index(rect)
+        self.rects[i]['dead'] = True
+    
+    def alive(self, rect):        
+        return not rect['dead']
 
     def trigger(self, clock_ticks):
-        if self.max_qtd <= len(self.enemies):
+        if self.max_qtd <= len(self.rects):
             return
         # speed=(random.random()+1)*max_speed
         if (clock_ticks - self.start_time) >= self.delta:
             self.start_time = clock_ticks
-            self.enemies.append(
-                    (
-                        random.random()*(SCREEN_SIZE[1]-self.sprites[0].get_width()),
-                        0, 
-                    )
-                )
+            randNum = random.random()*(SCREEN_SIZE[1]-self.sprites[0].get_width())
+            # self.enemies.append(
+            #         (
+            #             randNum,
+            #             0, 
+            #         )
+            #     )
+            new_rect = self.sprites[0].get_rect()
+            new_rect.x, new_rect.y = (randNum,0)
+            self.rects.append({
+                'rect':new_rect,
+                'dead':False,
+            })            
     
     def isOnScreen(self, position):
         return True if position[1] < SCREEN_SIZE[1] else False
+    
+    def isOnScreen2(self, item):
+        return True if item['rect'].y < SCREEN_SIZE[1] and not item['dead'] else False
     
     def get_sprite(self):
         return self.sprites[self.sprite_index]
@@ -48,12 +62,15 @@ class Enemy:
     def update(self, clock_ticks):
         
         self.trigger(clock_ticks)
+
         if (clock_ticks - self.anim_control) >= self.anim_time:
             self.anim_control = clock_ticks
             self.sprite_index += 1
             self.sprite_index %= len(self.sprites)
 
-        for i in range(len(self.enemies)):
-            self.enemies[i] = (self.enemies[i][0], self.enemies[i][1]+self.step)
+        for i in range(len(self.rects)):
+            # self.enemies[i] = (self.enemies[i][0], self.enemies[i][1]+self.step)
+            self.rects[i]['rect'].x, self.rects[i]['rect'].y = (self.rects[i]['rect'].x, self.rects[i]['rect'].y+self.step)
         
-        self.enemies = list(filter(lambda x: self.isOnScreen(x), self.enemies))
+        # self.enemies = list(filter(lambda x: self.isOnScreen(x) and self.alive(x), self.enemies))
+        self.rects = list(filter(lambda x: self.isOnScreen2(x), self.rects))
