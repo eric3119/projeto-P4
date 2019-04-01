@@ -4,6 +4,7 @@ import os.path
 class Loader():
 
     def __init__(self, sprites_path):
+        ''' carrega as animações e os elementos estaticos '''
 
         self.sprites_path = sprites_path
 
@@ -28,7 +29,7 @@ class Loader():
             EXIT='exit.png',
             BAR='press_start_bar.png',
         )
-
+        # carrega os 10 digitos
         NUMBERS = {k:'{}.png'.format(k) for k in range(10)}
 
         SPRITES = {k: os.path.join(self.static_path, v) for k, v in SPRITES.items()}
@@ -51,6 +52,7 @@ class Loader():
         }
 
     def get(self, item):
+        ''' retorna um dicionário de SPRITES ANIMATIONS BUTTONS ou NUMBERS'''
         return self.sprites_dict.get(item)
 
 
@@ -58,7 +60,7 @@ class Loader():
         return pygame.image.load(path)
     
     def load_pack(self, path):
-        
+        ''' carrega animações, os arquivos deve estar indexados de 1 à n '''
         sprites = []
         
         i = 1
