@@ -120,6 +120,9 @@ class Game():
                 self.screen.blit(self.numbers.get_sprite(item['value']), (item['rect'].x, item['rect'].y))
             self.numbers.update()
 
+            if self.numbers.missed_answer():
+                self.player.health-=1
+
             ## check collision
             
             for enemy in self.enemies.rects:
@@ -134,7 +137,13 @@ class Game():
                     
                     if shot['rect'].colliderect(enemy['rect']):                        
                         self.enemies.destroy(enemy)
-                        self.shots.destroy(shot)            
+                        self.shots.destroy(shot)  
+
+            for number in self.numbers.rects:
+                if number['rect'].colliderect(self.player.rect):
+                    if self.numbers.is_answer(number['value']):
+                        self.player.health+=1
+                    self.numbers.destroy(number)
             
             f = text.render("Vidas: "+str(self.player.health), True, [255, 255, 255])
             self.screen.blit(f, (

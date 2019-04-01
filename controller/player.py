@@ -35,8 +35,7 @@ class Player():
     def collide(self):
         if (pygame.time.get_ticks() - self.shield_time) >= self.delta:
             self.health-=1
-            self.shield_time = pygame.time.get_ticks()
-            print(self.health)
+            self.shield_time = pygame.time.get_ticks()            
     
     def update(self, direction):
 
