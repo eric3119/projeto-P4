@@ -1,1 +1,4 @@
-# projeto-P4
+# Space Math
+Requisitos:
+python 3,
+pygame
