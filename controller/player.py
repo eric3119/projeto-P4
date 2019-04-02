@@ -50,6 +50,7 @@ class Player():
         return (self.xpos, self.ypos)
     
     def collide(self):
+        ''' verifica se o escudo está ativado, então atribui o dano '''
         if (pygame.time.get_ticks() - self.shield_time) >= self.delta:
             self.health-=1
             self.shield_time = pygame.time.get_ticks()            
